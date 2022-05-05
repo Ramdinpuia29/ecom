@@ -28,8 +28,8 @@ export default class ProductController implements IController {
 
   private getAllProducts = async (req: Request, res: Response) => {
     const query = req.query;
-    const take = 5;
-    const skip = 0;
+    const take = (query.take as unknown as number) || 10;
+    const skip = (query.skip as unknown as number) || 0;
 
     const products = await this.product.find({
       where: { brand: Like(`%${query.keyword}%`) },
@@ -41,7 +41,7 @@ export default class ProductController implements IController {
     res.status(200).json({
       responseCode: res.statusCode,
       responseData: products,
-      responseMessage: `Products fetched successfully`,
+      responseMessage: `${products.length} product(s) fetched successfully`,
     });
   };
 
